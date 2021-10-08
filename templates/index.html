@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+
+    <title>사진 보내기 연습</title>
+
+
+    <script>
+
+        function preview() {
+
+            // 업로드된 이미지 미리보기해주는 스크립트
+            let img_result = 'false';
+
+            const reader = new FileReader();
+
+            reader.onload = (readerEvent) => {
+                document.querySelector("#img_section").setAttribute("src", readerEvent.target.result);
+                //파일을 읽는 이벤트가 발생하면 img_section의 src 속성을 readerEvent의 결과물로 대체함
+            };
+
+            document.querySelector("#upload_file").addEventListener("change", (changeEvent) => {
+                //upload_file 에 이벤트리스너를 장착
+
+                const imgFile = changeEvent.target.files[0];
+                reader.readAsDataURL(imgFile);
+                img_result = 'true'
+                //업로드한 이미지의 URL을 reader에 등록
+
+            })
+        }
+
+        function posting() {
+
+            //id=title/content 값을 각가 변수에 저장
+            //id=file에 들어있는 파일을 file변수에 저장
+            //각 변수를 form_data 생성후 추가
+            let title = $('#title').val();
+            let content = $("#content").val();
+            let file = $('#file')[0].files[0];
+            let form_data = new FormData();
+            form_data.append("file_give", file);
+            form_data.append("title_give", title);
+            form_data.append("content_give", content);
+
+
+            //ajax로 폼데이터 전송
+            $.ajax({
+                type: "POST",
+                url: "/send",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+
+</head>
+
+<body>
+<div class="wrap">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>일상을 공유해요!</h1>
+
+            <div class="posting-box">
+
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV953LLT612kt6UhgdxG9ruFiReF9iqV5Qjw&usqp=CAU"
+                     id="img_section" style="width: 400px; height: 400px;">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="upload_file">
+                </div>
+                <script>
+                    preview()
+                </script>
+
+
+
+                <div class="form-group">
+                    <input type="email" class="form-control" id="title"
+                           placeholder="사진 제목">
+                </div>
+
+                <div class="form-group">
+                    <textarea class="form-control" id="content" rows="3" placeholder="내용 입력"></textarea>
+                </div>
+
+                <button onclick="posting()" type="button" class="btn btn-primary">저장하기</button>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+</body>
+
+</html>
