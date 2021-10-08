@@ -21,32 +21,25 @@
 
 
     <script>
-
+        // 업로드된 이미지 미리보기해주는 스크립트
         function preview() {
 
-            // 업로드된 이미지 미리보기해주는 스크립트
             let img_result = 'false';
-
             const reader = new FileReader();
-
             reader.onload = (readerEvent) => {
                 document.querySelector("#img_section").setAttribute("src", readerEvent.target.result);
                 //파일을 읽는 이벤트가 발생하면 img_section의 src 속성을 readerEvent의 결과물로 대체함
             };
-
             document.querySelector("#upload_file").addEventListener("change", (changeEvent) => {
                 //upload_file 에 이벤트리스너를 장착
-
                 const imgFile = changeEvent.target.files[0];
                 reader.readAsDataURL(imgFile);
                 img_result = 'true'
                 //업로드한 이미지의 URL을 reader에 등록
-
             })
         }
-
+        // 이미지를 ajax를 통해 app.py로 보냄
         function posting() {
-
             //id=title/content 값을 각가 변수에 저장
             //id=file에 들어있는 파일을 file변수에 저장
             //각 변수를 form_data 생성후 추가
@@ -57,8 +50,6 @@
             form_data.append("file_give", file);
             form_data.append("title_give", title);
             form_data.append("content_give", content);
-
-
             //ajax로 폼데이터 전송
             $.ajax({
                 type: "POST",
@@ -84,16 +75,18 @@
             <h1>일상을 공유해요!</h1>
 
             <div class="posting-box">
-
+<!--                이미지 미입력시 기본 이미지 선택 preview안에 함수에 id 값 확인 필요-->
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV953LLT612kt6UhgdxG9ruFiReF9iqV5Qjw&usqp=CAU"
                      id="img_section" style="width: 400px; height: 400px;">
                 <div class="custom-file">
+<!--                    이미지 불러오는 인풋 생성 preview안에 함수에 id 값 확인 필요-->
                     <input type="file" class="custom-file-input" id="upload_file">
                 </div>
+
+<!--                스크립트안에 함수 넣지않으면 구동안함 이미지 들어오고 안들어오고 검지해야해서 여기서 실행 필요 한듯-->
                 <script>
                     preview()
                 </script>
-
 
 
                 <div class="form-group">
